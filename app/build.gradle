@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.ifsc.myapplication"
-        minSdk 28
-        targetSdk 32
+        minSdk 30
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -29,6 +29,7 @@ android {
 
 dependencies {
 
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
     testImplementation 'junit:junit:4.13.2'
