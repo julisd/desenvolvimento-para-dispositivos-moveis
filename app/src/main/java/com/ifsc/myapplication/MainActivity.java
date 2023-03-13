@@ -12,35 +12,33 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    Fragment fragmentA, fragmentB;
+    Fragment fragment;
     Button buttonA, buttonB;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonA=findViewById(R.id.buttonA);
-        buttonB=findViewById(R.id.buttonB);
-        buttonA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        buttonA = findViewById(R.id.buttonA);
+        buttonB = findViewById(R.id.buttonB);
+        buttonA.setOnClickListener(this::onClick);
+        buttonB.setOnClickListener(this::onClick);
     }
 
-    public void abreFragmentoA(View view){
-        fragmentA = new BlankFragment();
-        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentA, fragmentA);
+    public void abreFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout, fragment);
         transaction.commit();
     }
 
-    public void abreFragmentoB(View view){
-        fragmentB = new BlankFragment2();
-        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentA, fragmentB);
-        transaction.commit();
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonA:
+                fragment = new FragmentoA();
+                break;
+            case R.id.buttonB:
+                fragment = new FragmentoB();
+                break;
+        }
+        abreFragment();
     }
-
 }

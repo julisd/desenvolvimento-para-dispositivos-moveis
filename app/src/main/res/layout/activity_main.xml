@@ -10,7 +10,7 @@
 
 
     <FrameLayout
-        android:id="@+id/fragmentA"
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -23,23 +23,21 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/buttonA"
+        android:id="@+id/buttonB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="abreFragmentoB"
         android:text="Button B"
-        app:layout_constraintBottom_toBottomOf="@id/buttonB"
-        app:layout_constraintStart_toEndOf="@id/buttonB"
+        app:layout_constraintBottom_toBottomOf="@id/buttonA"
+        app:layout_constraintStart_toEndOf="@id/buttonA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5" />
 
     <Button
-        android:id="@+id/buttonB"
+        android:id="@+id/buttonA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="abreFragmentoA"
         android:text="Button A"
-        app:layout_constraintEnd_toStartOf="@id/buttonA"
+        app:layout_constraintEnd_toStartOf="@id/buttonB"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
