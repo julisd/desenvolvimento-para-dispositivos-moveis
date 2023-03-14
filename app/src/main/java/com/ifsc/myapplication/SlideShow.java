@@ -2,6 +2,7 @@ package com.ifsc.myapplication;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 
 public class SlideShow extends AppCompatActivity {
@@ -17,15 +18,15 @@ public class SlideShow extends AppCompatActivity {
         position = 0;
     }
 
-    public void last() {
+    public void last(View view) {
         position--;
         imageView.setImageResource(imagens[position]);
     }
-    public void home() {
+    public void home(View view) {
         position=0;
         imageView.setImageResource(imagens[position]);
     }
-    public void next() {
+    public void next(View view) {
         position++;
         imageView.setImageResource(imagens[position]);
     }
