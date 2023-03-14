@@ -13,32 +13,61 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     Fragment fragment;
-    Button buttonA, buttonB;
+    Button buttonA, buttonB, buttonC;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         buttonA = findViewById(R.id.buttonA);
         buttonB = findViewById(R.id.buttonB);
-        buttonA.setOnClickListener(this::onClick);
-        buttonB.setOnClickListener(this::onClick);
-    }
+        buttonC = findViewById(R.id.buttonC);
+        buttonA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.buttonA:
+                        fragment = new FragmentoA();
+                        break;
+                }
+                abreFragment();
+            }
+
+        });
+
+        buttonB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.buttonB:
+                        fragment = new FragmentoB();
+                        break;
+                }
+                abreFragment();
+            }
+
+        });
+
+        buttonC.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.buttonC:
+                    fragment = new FragmentoC();
+                    break;
+            }
+            abreFragment();
+        }
+
+    });
+}
+
+
 
     public void abreFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frameLayout, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.buttonA:
-                fragment = new FragmentoA();
-                break;
-            case R.id.buttonB:
-                fragment = new FragmentoB();
-                break;
-        }
-        abreFragment();
-    }
 }

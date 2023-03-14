@@ -8,7 +8,6 @@
     android:gravity="fill_vertical"
     tools:context=".MainActivity">
 
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
@@ -22,24 +21,40 @@
 
     </FrameLayout>
 
+
+    <Button
+        android:id="@+id/buttonC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Abre C"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintStart_toEndOf="@+id/buttonB"
+        app:layout_constraintTop_toTopOf="@+id/buttonA"
+        app:layout_constraintVertical_bias="0.0" />
+
     <Button
         android:id="@+id/buttonB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button B"
-        app:layout_constraintBottom_toBottomOf="@id/buttonA"
-        app:layout_constraintStart_toEndOf="@id/buttonA"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        android:layout_marginTop="16dp"
+        android:text="Abre B"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.377"
+        app:layout_constraintStart_toStartOf="@+id/buttonC"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button A"
-        app:layout_constraintEnd_toStartOf="@id/buttonB"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:text="Abre A"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonB"
+        app:layout_constraintEnd_toStartOf="@+id/buttonB"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/buttonB"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
