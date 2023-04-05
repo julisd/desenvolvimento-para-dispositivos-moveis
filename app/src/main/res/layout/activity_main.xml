@@ -4,83 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="IMC"
-        android:textSize="60sp" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="232dp"
-        android:src="@drawable/perfil"
-        app:srcCompat="@drawable/perfil" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="Peso" />
-
-        <EditText
-            android:id="@+id/edPeso"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="0.0"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="Altura" />
+            android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/edAltura"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="0.0"
-            android:inputType="textPersonName" />
+            <ImageView
+                android:id="@+id/ivDesfazerUltimaCamada"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_menu_revert" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/ivColorPicker"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:color/holo_blue_light" />
+            />
 
-    <Button
-        android:id="@+id/botaoCalcula"
+
+            <RadioGroup
+                android:id="@+id/rg_FormatosTraco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_FormatoTracoLinha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@android:drawable/button_onoff_indicator_off" />
+
+                <RadioButton
+                    android:id="@+id/rb_FormatoTracoQuadrado"
+                    android:layout_width="29dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@android:drawable/picture_frame"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <RadioButton
+                    android:id="@+id/rb_FormatoTracoCirculo"
+                    android:layout_width="31dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="?android:attr/listChoiceIndicatorSingle"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </RadioGroup>
+
+            <SeekBar
+                android:id="@+id/sbEspessuraTraco"
+                android:layout_width="208dp"
+                android:layout_height="match_parent" />
+
+        </TableRow>
+    </TableLayout>
+
+    <com.ifsc.myapplication.SimplePaint
+        android:id="@+id/simplePaint"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:onClick="calcularIMC"
-        android:text="Calcular" />
-
-    <TextView
-        android:id="@+id/tvResultado"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="---"
-        android:textSize="60sp" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
