@@ -1,45 +1,31 @@
 package com.ifsc.myapplication;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    FrutaController frutaController;
 
-    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = findViewById(R.id.listView);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView tvNome = view.findViewById(R.id.tvNome);
-                String nome = tvNome.getText().toString();
+        PackageManager pm = getPackageManager();
+        List<ApplicationInfo> listApps;
+        listApps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-                Toast.makeText(getApplicationContext(), nome, Toast.LENGTH_SHORT).show();
-            }
-        });
+        for (ApplicationInfo appinfo:listApps) {
+            Log.d("App", appinfo.packageName + pm.getApplicationLabel(appinfo).toString());
 
-        frutaController = new FrutaController();
-        atualizaLista();
-    }
+        }
 
-    public void atualizaLista(){
-        listView.setAdapter(
-                new ArrayFrutaAdapter(
-                        getApplicationContext(),
-                        R.layout.item_lista,
-                        frutaController.FRUTAS
-                )
-        );
     }
 }

@@ -12,18 +12,18 @@ public class Fruta {
         private BigDecimal avaliacoes;
         private int codigo;
 
-        public Fruta(String nome, String descricao, int imagem, BigDecimal preco, BigDecimal preco_venda, int num_avaliacoes, BigDecimal avaliacoes, int codigo) {
-            this.nome = nome;
-            this.descricao = descricao;
-            this.imagem = imagem;
-            this.preco = preco;
-            this.preco_venda = preco_venda;
-            this.num_avaliacoes = num_avaliacoes;
-            this.avaliacoes = avaliacoes;
-            this.codigo = codigo;
-        }
+    public Fruta(String nome, String descricao, int imagem, BigDecimal preco, BigDecimal preco_venda, int num_avaliacoes, BigDecimal avaliacoes, int codigo) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.imagem = imagem;
+        this.preco = preco;
+        this.preco_venda = preco_venda;
+        this.num_avaliacoes = num_avaliacoes;
+        this.avaliacoes = avaliacoes;
+        this.codigo = codigo;
+    }
 
-        public String getNome() {
+    public String getNome() {
             return nome;
         }
 
