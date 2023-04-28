@@ -1,54 +1,64 @@
 package com.ifsc.myapplication;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText editTextPeso, editTextAltura;
-    TextView textViewResultado;
-    ImageView imageView;
-
+    SQLiteDatabase sqLiteDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editTextPeso=findViewById(R.id.edPeso);
-        editTextAltura=findViewById(R.id.edAltura);
-        imageView=findViewById(R.id.imageView);
-        textViewResultado=findViewById(R.id.tvResultado);
-        editTextPeso.setText(getIntent().getExtras().getString("editTextPeso"));
+
+        sqLiteDatabase = openOrCreateDatabase("testBd",MODE_PRIVATE, null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS nota(id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "titulo VARCHAR," +
+                "txt VARCHAR)");
+        insertNota();
     }
 
-    public void calcularIMC(View v){
-        double peso, altura, imc;
+    public void insertNota(){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("titulo", "titulo1");
+        contentValues.put("txt", "txt1");
 
-        peso=Double.parseDouble(editTextPeso.getText().toString());
-        altura=Double.parseDouble(editTextAltura.getText().toString());
+        sqLiteDatabase.insert("nota", null, contentValues);
+    }
 
-        imc = peso/(altura*altura);
+    public void atualizaNotas(){
 
-        textViewResultado.setText(Double.toString(imc));
+    }
+   @SuppressLint("Range")
+    public ArrayList<String> listNotas(){
+        ArrayList<String> resultado = new ArrayList<>();
+       Cursor c = sqLiteDatabase.rawQuery("Select * from nota",null);
+       c.moveToFirst();
+       while (!c.isAfterLast()){
+           resultado.add(c.getString(c.getColumnIndex("titulo")));
+           c.moveToNext();
+       }
+       return resultado;
+    }
 
-
-        if(imc >= 16 && imc <= 18.49 )
-            imageView.setImageResource(R.drawable.abaixopeso);
-        if (imc >= 18.5 && imc <= 24.9)
-            imageView.setImageResource(R.drawable.normal);
-        else if (imc >= 25 && imc <= 29.9)
-            imageView.setImageResource(R.drawable.sobrepeso);
-        else if (imc >= 30 && imc <= 34.9)
-            imageView.setImageResource(R.drawable.obesidade1);
-        else if (imc >= 35 && imc <= 39.9)
-            imageView.setImageResource(R.drawable.obesidade2);
-        else if (imc >= 40)
-            imageView.setImageResource(R.drawable.obesidade3);
-
+    @Override
+    protected void onStart(){
+        super.onStart();
+        ListView listView = findViewById(R.id.listview);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                listNotas()
+        );
+        listView.setAdapter(adapter);
     }
 }
