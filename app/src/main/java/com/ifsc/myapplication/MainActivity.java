@@ -1,64 +1,77 @@
 package com.ifsc.myapplication;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    SQLiteDatabase sqLiteDatabase;
+    private ListView listView;
+    private NotaController controller;
+    private List<Nota> arrayNotas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        sqLiteDatabase = openOrCreateDatabase("testBd",MODE_PRIVATE, null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS nota(id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "titulo VARCHAR," +
-                "txt VARCHAR)");
-        insertNota();
+        listView = findViewById(R.id.listView);
     }
 
-    public void insertNota(){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("titulo", "titulo1");
-        contentValues.put("txt", "txt1");
-
-        sqLiteDatabase.insert("nota", null, contentValues);
-    }
-
-    public void atualizaNotas(){
-
-    }
-   @SuppressLint("Range")
-    public ArrayList<String> listNotas(){
-        ArrayList<String> resultado = new ArrayList<>();
-       Cursor c = sqLiteDatabase.rawQuery("Select * from nota",null);
-       c.moveToFirst();
-       while (!c.isAfterLast()){
-           resultado.add(c.getString(c.getColumnIndex("titulo")));
-           c.moveToNext();
-       }
-       return resultado;
+    public void cadastrarNota(View v) {
+        Intent intent = new Intent(this, ActivityExibirNota.class);
+        startActivity(intent);
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
-        ListView listView = findViewById(R.id.listview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
+        controller = new NotaController(this);
+        ArrayList<String> dataset = controller.listaTituloNotas();
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                getApplicationContext(),
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
-                listNotas()
-        );
-        listView.setAdapter(adapter);
+                dataset);
+        listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),Long.toString(parent.getItemIdAtPosition(position) ), Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getApplicationContext(), ActivityExibirNota.class);
+                Nota n = controller.recuperaNota(controller.listaNotas().get(position).getId());
+                i.putExtra("notaId",controller.listaNotas().get(position).getId());
+                startActivity(i);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder adb=new AlertDialog.Builder(MainActivity.this);
+                adb.setTitle("Confirmar exclusão nota");
+                adb.setMessage("Excluir nota?");
+                adb.setNegativeButton("Cancelar", null);
+                adb.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        controller.excluirNota(controller.listaNotas().get(position));
+                        onResume();
+                    }
+                });
+                adb.show();
+                return true;
+            }
+        });
     }
 }
