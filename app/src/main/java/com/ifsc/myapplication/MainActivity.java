@@ -1,20 +1,16 @@
 package com.ifsc.myapplication;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +19,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     MediaPlayer mediaPlayer;
     ImageButton bntPlay,stop, pausa;
-    SeekBar seekBarTime;
-    TextView tvTime;
+    SeekBar seekBarTime, seekBarVolume;
+    TextView tvTime, tvNome;
+    private AudioManager audioManager;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,14 +37,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bntPlay.setOnClickListener(this);
         pausa.setOnClickListener(this);
         stop.setOnClickListener(this);
-
+        seekBarVolume =findViewById(R.id.seekBarVolume);
         seekBarTime = findViewById(R.id.seekBarTime);
+        tvNome=findViewById(R.id.tvNome);
         tvTime = findViewById(R.id.tvTime);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        inicializaSeekBar();
         timerCounter();
 
         seekBarTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress,AudioManager.FLAG_SHOW_UI);
                 seekBar.setMax(mediaPlayer.getDuration());
                 mediaPlayer.seekTo(seekBarTime.getProgress());
             }
@@ -63,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+    public void inicializaSeekBar(){
+        int volumeMaximo = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int volumeAtual = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        seekBarVolume.setMax(volumeMaximo);
+        seekBarVolume.setProgress(volumeAtual);
+    }
 
 
     @Override
@@ -76,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mediaPlayer.pause();
                 break;
             case R.id.stop:
-                mediaPlayer.stop();
+                if (this.mediaPlayer!=null && mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.seminovos);
+                }
                 break;
         }
     }
