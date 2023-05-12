@@ -13,10 +13,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
 
-        <activity android:name=".ActivityExibirNota" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityNotasMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivityAddNota"></activity>
+        <activity android:name=".ActivityGetNota"></activity>
+        <activity android:name=".ActivityUpdateNota"></activity>
     </application>
 
 </manifest>

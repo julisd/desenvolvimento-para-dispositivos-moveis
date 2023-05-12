@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="conteudoList">Conteudo:</string>
+    <string name="tituloList">Titulo:</string>
+    <string name="novaNota">Nova Nota</string>
+    <string name="idNotaExibe">ID Nota:</string>
+    <string name="idNotaHint">ID Nota</string>
+    <string name="tituloExibe">Titulo:</string>
+    <string name="tituloHint">Titulo</string>
+    <string name="textoExibe">Texto:</string>
+    <string name="textoHint">Texto</string>
 </resources>
