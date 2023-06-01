@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textViewId"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_above="@id/editTextId"
+        android:text="@string/idNotaExibe" />
+
+    <EditText
+        android:id="@+id/editTextId"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_above="@id/textViewTitulo"
+        android:hint=""
+        android:text=""
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/textViewTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_above="@id/editTextTitulo"
+        android:text="@string/tituloExibe" />
+
+    <EditText
+        android:id="@+id/editTextTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_above="@id/textViewTexto"
+        android:hint=""
+        android:text=""
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/textViewTexto"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_above="@id/editTextTexto"
+        android:text="@string/textoExibe" />
+
+    <EditText
+        android:id="@+id/editTextTexto"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:hint=""
+        android:text=""
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/buttonNota"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:text="" />
+
+</RelativeLayout>
