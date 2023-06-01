@@ -1,76 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/txtSensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VALOR SENSOR"
+        app:layout_constraintBottom_toTopOf="@+id/txtSensor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.896" />
 
-            <ImageView
-                android:id="@+id/ivDesfazerUltimaCamada"
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_menu_revert" />
-
-            <ImageView
-                android:id="@+id/ivColorPicker"
-                android:layout_width="45dp"
-                android:layout_height="match_parent"
-                app:srcCompat="@android:color/holo_blue_light" />
-            />
-
-
-            <RadioGroup
-                android:id="@+id/rg_FormatosTraco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rb_FormatoTracoLinha"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@android:drawable/button_onoff_indicator_off" />
-
-                <RadioButton
-                    android:id="@+id/rb_FormatoTracoQuadrado"
-                    android:layout_width="29dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@android:drawable/picture_frame"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-                <RadioButton
-                    android:id="@+id/rb_FormatoTracoCirculo"
-                    android:layout_width="31dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="?android:attr/listChoiceIndicatorSingle"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-            </RadioGroup>
-
-            <SeekBar
-                android:id="@+id/sbEspessuraTraco"
-                android:layout_width="208dp"
-                android:layout_height="match_parent" />
-
-        </TableRow>
-    </TableLayout>
-
-    <com.ifsc.myapplication.SimplePaint
-        android:id="@+id/simplePaint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
