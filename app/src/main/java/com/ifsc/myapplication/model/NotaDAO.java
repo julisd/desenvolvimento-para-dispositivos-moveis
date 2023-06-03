@@ -12,7 +12,6 @@ public class NotaDAO {
 	SQLiteDatabase db;
 	
 	public NotaDAO(Context c){
-		// por alguma razao o context vem sempre da MainActivity, @TODO ler sobre Context...
 		db = c.openOrCreateDatabase("dbNotasMVC", c.MODE_PRIVATE, null);
 		
 		String sql = "CREATE TABLE IF NOT EXISTS notas " +
@@ -35,7 +34,6 @@ public class NotaDAO {
 		Integer idAdded = (int) db.insert("notas", null, notaValue);
 		nota.setIdNota(idAdded);
 		
-		// @TODO should return null if negative?
 		if(idAdded < 0){
 			System.out.println("Falha ao adicionar entrada no banco. Retorno: " + idAdded);
 			return null;
@@ -82,7 +80,6 @@ public class NotaDAO {
 			db.validateSql(sql, null);
 		}
 		catch(SQLiteException e){
-			// @TODO o que fazer com sql invalido? retornar null?
 			System.out.println("Exception in SQL to select nota. Erro: " + e);
 			return null;
 		}
