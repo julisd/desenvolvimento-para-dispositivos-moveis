@@ -1,85 +1,117 @@
 package com.ifsc.myapplication.DAO;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import com.ifsc.myapplication.Models.Alimento;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
-public class NutriTableDAO {
+public class NutriTableDAO extends SQLiteOpenHelper {
 
-    SQLiteDatabase bd;
+    private static final String DATABASE_NAME = "taco_4___edicao";
+    private static final int DATABASE_VERSION = 1;
+    private static final String TABLE_NAME = "taco_4___edicao";
+    private static final String ALIMENTO_COLUMN = "Alimento";
+    private Context mContext;
 
     public NutriTableDAO(Context context) {
-        bd = context.openOrCreateDatabase("csv_db", context.MODE_PRIVATE, null);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
+    }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
         try {
-            abreArquivoSQL(context);
+            InputStream inputStream = mContext.getAssets().open("taco_4___edicao.sql");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            String[] comandos = stringBuilder.toString().split(";");
+            for(String comando : comandos){
+                db.execSQL(comando);
+            }
+            reader.close();
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void abreArquivoSQL(Context context) throws IOException {
-
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(context.getAssets().open("taco_4___edicao.sql"), "UTF-8"));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String lineSQL = line.toString();
-            this.bd.execSQL(lineSQL);
-        }
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public ArrayList<Alimento> getAlimentos() {
+    public List<String> getAllFoodNames() {
+        List<String> foodList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT Alimento FROM " + TABLE_NAME, null);
 
-        ArrayList<Alimento> arraylistadeAlimentos = new ArrayList<Alimento>();
-
-        Cursor cursor;
-        cursor = bd.rawQuery("SELECT * FROM taco_4", null,null);
-        cursor.moveToFirst();
-
-        while(!cursor.isAfterLast())
-        {
-            Alimento alimento = new Alimento();
-            alimento.setCategoria(cursor.getString(cursor.getColumnIndexOrThrow("Caterogia")));
-            alimento.setNome(cursor.getString(cursor.getColumnIndexOrThrow("Alimento")));
-            /*alimento.setUmidade(cursor.getString(cursor.getColumnIndexOrThrow("Umidade")));
-            alimento.setEnergiakcal(cursor.getString(cursor.getColumnIndexOrThrow("Energiakcal")));
-            alimento.setkJ(cursor.getString(cursor.getColumnIndexOrThrow("kJ")));
-            alimento.setProteonag(cursor.getString(cursor.getColumnIndexOrThrow("Proteonag")));
-            alimento.setLipodeosg(cursor.getString(cursor.getColumnIndexOrThrow("Lipodeosg")));
-            alimento.setColesterolmg(cursor.getString(cursor.getColumnIndexOrThrow("Colesterolmg")));
-            alimento.setCarboidratosg(cursor.getString(cursor.getColumnIndexOrThrow("Carboidratosg")));
-            alimento.setFibraAlimentarg(cursor.getString(cursor.getColumnIndexOrThrow("FibraAlimentarg")));
-            alimento.setCinzasg(cursor.getString(cursor.getColumnIndexOrThrow("Cinzasg")));
-            alimento.setCalciomg(cursor.getString(cursor.getColumnIndexOrThrow("Calciomg")));
-            alimento.setMagnesiomg(cursor.getString(cursor.getColumnIndexOrThrow("Magnesiomg")));
-            alimento.setManganesmg(cursor.getString(cursor.getColumnIndexOrThrow("Manganesmg")));
-            alimento.setFosforomg(cursor.getString(cursor.getColumnIndexOrThrow("Fósforomg")));
-            alimento.setFerromg(cursor.getString(cursor.getColumnIndexOrThrow("Ferromg")));
-            alimento.setSodiomg(cursor.getString(cursor.getColumnIndexOrThrow("Sódiomg")));
-            alimento.setPotassiomg(cursor.getString(cursor.getColumnIndexOrThrow("Potassiomg")));
-            alimento.setCobremg(cursor.getString(cursor.getColumnIndexOrThrow("Cobremg")));
-            alimento.setZincomg(cursor.getString(cursor.getColumnIndexOrThrow("Zincomg")));
-            alimento.setRetinolmcg(cursor.getString(cursor.getColumnIndexOrThrow("Retinolmcg")));
-            alimento.setRemcg(cursor.getString(cursor.getColumnIndexOrThrow("REmcg")));
-            alimento.setRaemcg(cursor.getString(cursor.getColumnIndexOrThrow("RAEmcg")));
-            alimento.setTiaminamg(cursor.getString(cursor.getColumnIndexOrThrow("Tiaminamg")));
-            alimento.setRiboflavinamg(cursor.getString(cursor.getColumnIndexOrThrow("Riboflavinamg")));
-            alimento.setPiridoxinamg(cursor.getString(cursor.getColumnIndexOrThrow("Piridoxinamg")));
-            alimento.setNiacinamg(cursor.getString(cursor.getColumnIndexOrThrow("Niacinamg")));
-            alimento.setVitaminaCmg(cursor.getString(cursor.getColumnIndexOrThrow("VitaminaCmg")));*/
-
-            arraylistadeAlimentos.add(alimento);
-            cursor.moveToNext();
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String food = cursor.getString(cursor.getColumnIndex("Alimento"));
+                foodList.add(food);
+            } while (cursor.moveToNext());
         }
 
-        return arraylistadeAlimentos;
+        cursor.close();
+        db.close();
+
+        return foodList;
     }
+
+    @SuppressLint("Range")
+    public String getFoodAttributes(String foodName) {
+        StringBuilder attributesBuilder = new StringBuilder();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE Alimento = '" + foodName + "'", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                attributesBuilder.append("Umidade: ").append(cursor.getString(cursor.getColumnIndex("Umidade"))).append("\n");
+                attributesBuilder.append("Energia (kcal): ").append(cursor.getString(cursor.getColumnIndex("Energiakcal"))).append("\n");
+                attributesBuilder.append("Energia (kJ): ").append(cursor.getString(cursor.getColumnIndex("kJ"))).append("\n");
+                // poderia add mais atributos
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return attributesBuilder.toString();
+    }
+
+    public List<String> getAllFood() {
+        List<String> foodList = new ArrayList<>();
+
+        // Abra o banco de dados
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Execute a consulta para recuperar todos os alimentos
+        Cursor cursor = db.rawQuery("SELECT Alimento FROM taco_4___edicao", null);
+
+        // Percorra o cursor e adicione os alimentos à lista
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String food = cursor.getString(cursor.getColumnIndex("Alimento"));
+                foodList.add(food);
+            } while (cursor.moveToNext());
+        }
+
+        // Feche o cursor e o banco de dados
+        cursor.close();
+        db.close();
+
+        return foodList;
+    }
+
 }

@@ -1,30 +1,33 @@
 package com.ifsc.myapplication.controller;
 
 import android.content.Context;
+import android.widget.ArrayAdapter;
 
-import com.ifsc.myapplication.Models.Alimento;
 import com.ifsc.myapplication.DAO.NutriTableDAO;
+import com.ifsc.myapplication.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TabelaNutricionalController {
     NutriTableDAO nutriTableDAO;
-    Context mContext;
+    private ArrayAdapter<String> adapter;
 
     public TabelaNutricionalController(Context context) {
-        this.mContext = context;
-        this.nutriTableDAO = new NutriTableDAO(mContext);
+        nutriTableDAO = new NutriTableDAO(context);
     }
 
-    public ArrayList<String> getNomeAlimentos() {
-        ArrayList<String> nomesAlimentos = new ArrayList<String>();
-        for (Alimento alimento : this.nutriTableDAO.getAlimentos()) {
-            nomesAlimentos.add(alimento.getNome());
-        }
-        return nomesAlimentos;
+    public ArrayAdapter<String> initializeAdapter(Context context) {
+        List<String> foodList = nutriTableDAO.getAllFoodNames();
+        adapter = new ArrayAdapter<>(context, R.layout.list_item_food, foodList);
+        return adapter;
     }
 
-    public ArrayList<Alimento> getAlimentos() {
-        return this.nutriTableDAO.getAlimentos();
+    public List<String> getAllFood() {
+        return nutriTableDAO.getAllFood();
     }
+
+    public String getFoodAttributes(String nome){
+        return nutriTableDAO.getFoodAttributes(nome);
+    }
+
 }
