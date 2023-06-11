@@ -14,7 +14,6 @@ public class NotaController {
 	
 	public NotaController(Context c){
 		this.mContext = c;
-		// controlador é quem deve falar com o DB...
 		this.notaDAO = new NotaDAO(this.mContext);
 	}
 	
@@ -34,6 +33,10 @@ public class NotaController {
 		return this.notaDAO.getNota(idNota);
 	}
 	
+	public ArrayList<Nota> getListaNotas(String pesquisa) {
+		return this.notaDAO.getListaNotas(pesquisa);
+	}
+
 	public ArrayList<Nota> getListaNotas() {
 		return this.notaDAO.getListaNotas();
 	}

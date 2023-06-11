@@ -1,5 +1,6 @@
 package com.ifsc.myapplication.model;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +13,7 @@ public class NotaDAO {
 	SQLiteDatabase db;
 	
 	public NotaDAO(Context c){
-		db = c.openOrCreateDatabase("dbNotasMVC", c.MODE_PRIVATE, null);
+		db = c.openOrCreateDatabase("dbNotas", c.MODE_PRIVATE, null);
 		
 		String sql = "CREATE TABLE IF NOT EXISTS notas " +
 				"(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo VARCHAR, texto VARCHAR)";
@@ -21,7 +22,6 @@ public class NotaDAO {
 			db.execSQL(sql);
 		}
 		catch(SQLiteException e){
-			// @TODO o que fazer com sql invalido?
 			System.out.println("Exception to create DB tables. Erro: " + e);
 		}
 	}
@@ -74,6 +74,7 @@ public class NotaDAO {
 		return true;
 	}
 	
+	@SuppressLint("Range")
 	public Nota getNota(Integer idNota){
 		String sql = "SELECT * FROM notas WHERE id=" + idNota;
 		try{
@@ -103,6 +104,36 @@ public class NotaDAO {
 		return nota;
 	}
 	
+	public ArrayList<Nota> getListaNotas(String pesquisa){
+		ArrayList<Nota> listaNotas = new ArrayList<>();
+
+		String sql ="SELECT * FROM notas WHERE titulo LIKE ?";
+		try{
+			db.validateSql(sql, null);
+		}
+		catch(SQLiteException e){
+			System.out.println("Exception in SQL to select notas. Erro: " + e);
+			return listaNotas; // retornando lista vazia...
+		}
+
+		Cursor cursor = db.rawQuery(sql, new String[] {"%" + pesquisa + "%"});
+		cursor.moveToFirst();
+	
+		int qtdRetornada = cursor.getCount();
+		System.out.println("Fim qtdRetornada: "+ qtdRetornada);
+		for (int i = 0; i < qtdRetornada; i++){
+			@SuppressLint("Range") Integer idNota = cursor.getInt(cursor.getColumnIndex("id"));
+			@SuppressLint("Range") String titulo = cursor.getString(cursor.getColumnIndex("titulo"));
+			@SuppressLint("Range") String texto = cursor.getString(cursor.getColumnIndex("texto"));
+			Nota nota = new Nota(idNota, titulo, texto);
+			listaNotas.add(nota);
+			
+			cursor.moveToNext();
+		}
+		System.out.println("Fim getListaNotas");
+		return listaNotas;
+	}
+
 	public ArrayList<Nota> getListaNotas(){
 		ArrayList<Nota> listaNotas = new ArrayList<>();
 
@@ -117,16 +148,16 @@ public class NotaDAO {
 
 		Cursor cursor = db.rawQuery(sql, null);
 		cursor.moveToFirst();
-	
+
 		int qtdRetornada = cursor.getCount();
 		System.out.println("Fim qtdRetornada: "+ qtdRetornada);
 		for (int i = 0; i < qtdRetornada; i++){
-			Integer idNota = cursor.getInt(cursor.getColumnIndex("id"));
-			String titulo = cursor.getString(cursor.getColumnIndex("titulo"));
-			String texto = cursor.getString(cursor.getColumnIndex("texto"));
+			@SuppressLint("Range") Integer idNota = cursor.getInt(cursor.getColumnIndex("id"));
+			@SuppressLint("Range") String titulo = cursor.getString(cursor.getColumnIndex("titulo"));
+			@SuppressLint("Range") String texto = cursor.getString(cursor.getColumnIndex("texto"));
 			Nota nota = new Nota(idNota, titulo, texto);
 			listaNotas.add(nota);
-			
+
 			cursor.moveToNext();
 		}
 		System.out.println("Fim getListaNotas");

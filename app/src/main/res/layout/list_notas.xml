@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp"
     android:layout_marginVertical="20dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".ActivityNotasMain">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,12 +74,5 @@
 
     </LinearLayout>
 
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-    <!--        android:id="@+id/nodepad_icon"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="bottom|end"-->
-    <!--        android:layout_margin="@dimen/fab_margin"-->
-    <!--        app:srcCompat="@drawable/ic_save_black_24dp" />-->
 
 </LinearLayout>

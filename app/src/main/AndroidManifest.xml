@@ -23,9 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityAddNota"></activity>
-        <activity android:name=".ActivityGetNota"></activity>
-        <activity android:name=".ActivityUpdateNota"></activity>
+        <activity
+            android:name=".ActivityAddNota"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityGetNota"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityUpdateNota"
+            android:exported="false" />
+
     </application>
 
 </manifest>

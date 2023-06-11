@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 
@@ -16,9 +17,11 @@ import com.ifsc.myapplication.model.Nota;
 
 import java.util.ArrayList;
 
-public class ActivityNotasMain extends AppCompatActivity {
+public class ActivityNotasMain extends AppCompatActivity implements AdapterView.OnItemLongClickListener, SearchView.OnQueryTextListener {
 	ListView listView;
 	NotaController notaController;
+	SearchView searchView;
+
 	NotaAdapterListView notaAdapter;
 	
 	@Override
@@ -28,28 +31,21 @@ public class ActivityNotasMain extends AppCompatActivity {
 
 		notaController = new NotaController(getApplicationContext());
 		listView = findViewById(R.id.listView);
+		searchView = findViewById(R.id.searchView);
 		notaAdapter = new NotaAdapterListView(
 				getApplicationContext(),
 				R.layout.list_notas,
 				new ArrayList()
 		);
 		listView.setAdapter(notaAdapter);
-		
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		listView.setOnItemLongClickListener(this);
+		searchView.setOnQueryTextListener(this);
+	}
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Nota nota = (Nota) parent.getItemAtPosition(position);
-				System.out.println("Click normal: nota.getIdNota(): "+ nota.getIdNota());
-				exibirNota(view, nota.getIdNota());
-			}
-		});
-		
-		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, long id) {
-				final Nota nota = (Nota) parent.getItemAtPosition(position);
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+				final Nota nota = (Nota) adapterView.getItemAtPosition(i);
 				System.out.println("Click longo: nota.getIdNota(): "+ nota.getIdNota());
-				System.out.println("Click normal: position: "+ position);
+				System.out.println("Click normal: position: "+ i);
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(ActivityNotasMain.this);
 				builder.setTitle("Selecione a Acao: ")
@@ -72,8 +68,6 @@ public class ActivityNotasMain extends AppCompatActivity {
 				builder.show();
 				return true;
 			}
-		});
-	}
 	
 	protected void onStart() {
 		super.onStart();
@@ -121,5 +115,22 @@ public class ActivityNotasMain extends AppCompatActivity {
 		notaAdapter.clear();
 		notaAdapter.addAll(notaController.getListaNotas());
 	}
-	
+
+	@Override
+	public boolean onQueryTextSubmit(String s) {
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String s) {
+		listView.setAdapter(
+				new NotaAdapterListView(
+						getApplicationContext(),
+						R.layout.list_notas,
+						notaController.getListaNotas(s)
+				)
+		);
+		return false;
+
+	}
 }
