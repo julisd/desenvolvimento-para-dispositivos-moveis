@@ -35,6 +35,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.github.skydoves:colorpickerview:2.2.4'
+    implementation "com.androidplot:androidplot-core:1.5.10"
 
 }
