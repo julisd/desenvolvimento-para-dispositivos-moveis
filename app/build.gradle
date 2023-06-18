@@ -36,5 +36,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.androidplot:androidplot-core:1.5.10"
+    implementation 'com.jjoe64:graphview:4.2.2'
 
 }

@@ -1,124 +1,143 @@
 package com.ifsc.myapplication;
 
-import android.annotation.SuppressLint;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYGraphWidget;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
-import androidx.appcompat.app.AppCompatActivity;
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
-
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
-
-    private XYPlot plot;
+    private GraphView graphView;
+    private BarGraphSeries<DataPoint> series;
     private SensorManager sensorManager;
     private Sensor stepSensor;
-    private List<Date> days;
-    private List<Integer> steps;
-    private XYSeries series;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Obtém uma referência ao layout que contém o gráfico
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        LinearLayout chartLayout = findViewById(R.id.chartLayout);
+        graphView = findViewById(R.id.graphView);
 
-        // Cria o objeto XYPlot
-        plot = new XYPlot(this, "Contador de Passos");
+        series = new BarGraphSeries<>();
+        graphView.addSeries(series);
 
-        // Cria a lista de dados de dias e passos
-        days = new ArrayList<>();
-        steps = new ArrayList<>();
+        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    // Formatação da data
+                    calendar.setTimeInMillis((long) value);
+                    Date date = calendar.getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+                    return sdf.format(date);
+                } else {
+                    // Formatação da quantidade de passos
+                    return super.formatLabel(value, isValueX);
+                }
+            }
+        });
 
-        // Configura o gerenciador do sensor
+        graphView.getGridLabelRenderer().setNumHorizontalLabels(3); // Número de dias no eixo X
+        graphView.getGridLabelRenderer().setNumVerticalLabels(4); // Número de valores no eixo Y
+
+        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            @Override
+            public int get(DataPoint data) {
+                if (data.getY() >= 30) { // Limite de 30 passos
+                    return Color.BLUE;
+                } else {
+                    return Color.GRAY;
+                }
+            }
+        });
+
+        series.setSpacing(50); // Espaçamento entre as barras do gráfico
+
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (sensorManager != null) {
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        }
 
-        // Cria a série XY
-        series = new SimpleXYSeries(steps, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Passos");
-
-        // Define as configurações da linha e ponto do gráfico
-        LineAndPointFormatter seriesFormat = new LineAndPointFormatter(
-                Color.BLUE,                           // cor da linha
-                Color.RED,                            // cor dos pontos
-                null,                                 // cor de preenchimento (não usado)
-                null                                  // cor da borda (não usado)
-        );
-
-        // Adiciona a série formatada ao gráfico
-        plot.addSeries(series, seriesFormat);
-
-        // Define o formato do eixo X como datas
-        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(
-                new SimpleDateFormat("dd/MM/yyyy"));
-
-        // Adiciona o gráfico ao layout
-        chartLayout.addView(plot);
+        if (stepSensor == null) {
+            Toast.makeText(this, "Sensor de contador de passos não encontrado", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Registra o SensorEventListener para o sensor de contador de passos
-        sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (stepSensor != null) {
+            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Desregistra o SensorEventListener quando a atividade é pausada
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Método vazio, não utilizado neste exemplo
+        if (stepSensor != null) {
+            sensorManager.unregisterListener(this, stepSensor);
+        }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            int stepCount = (int) event.values[0];
+        int steps = (int) event.values[0];
+        updateGraph(steps);
+    }
 
-            // Obtém a data atual
-            Date currentDate = new Date();
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
-            days.add(currentDate);
-            steps.add(stepCount);
+    private void updateGraph(int steps) {
+        DataPoint[] dataPoints = new DataPoint[3];
+        calendar = Calendar.getInstance();
 
-            // Limita a quantidade de dados exibidos no gráfico
-            if (days.size() > 10) {
-                days.remove(0);
-                steps.remove(0);
+        for (int i = 0; i < 3; i++) {
+            if (i != 0) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
             }
 
-            // Cria uma nova instância da série XY com os dados atualizados
-            series = new SimpleXYSeries(steps, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Passos");
+            Date date = calendar.getTime();
+            DataPoint dataPoint = new DataPoint(date.getTime(), steps);
+            dataPoints[i] = dataPoint;
 
-            // Remove a série antiga e adiciona a nova série ao gráfico
-            plot.clear();
-            plot.addSeries(series, new LineAndPointFormatter(Color.BLUE, Color.RED, null, null));
-
-            // Redesenha o gráfico
-            plot.redraw();
+            // Incrementa a quantidade de passos a cada 10
+            steps += 10;
         }
+
+        series.resetData(dataPoints);
+
+        // Define a escala do eixo Y
+        graphView.getViewport().setMinY(10); // Valor mínimo do eixo Y
+        graphView.getViewport().setMaxY(40); // Valor máximo do eixo Y
+
+        // Atualiza o gráfico
+        graphView.onDataChanged(true, true);
     }
+
 }
