@@ -25,7 +25,6 @@ public class ExibeAlimento extends AppCompatActivity {
         int idAlimento = getIntent().getExtras().getInt("id");
 
         this.tabelaNutricionalController = new TabelaNutricionalController(getBaseContext());
-        this.alimento = tabelaNutricionalController.getAlimentos().get(idAlimento);
 
         this.textViewCategoria = findViewById(R.id.textViewCategoria);
         this.textViewAlimento = findViewById(R.id.textViewAlimento);
